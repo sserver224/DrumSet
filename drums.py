@@ -90,7 +90,7 @@ class HapticDrum:
 # Create Drum Objects
 pygame.mixer.init()
 pygame.display.init()
-pygame.mixer.set_num_channels(36)
+pygame.mixer.set_num_channels(41)
 pygame.joystick.init()
 bass_drum = HapticDrum('bass_drum','BD', 0, 36)
 bass_drum_2 = HapticDrum('kick_2','BD', 30, 35)
@@ -128,12 +128,17 @@ vibraslap=HapticDrum('vibraslap',None, 27, 58)
 splash=HapticDrum('splash_cymbal',None, 33, 55)
 ride_bell=HapticDrum('ride_bell',None, 34, 53)
 tambourine=HapticDrum('tambourine',None, 35, 54)
+hi_agogo=HapticDrum('hi_agogo',None, 36, 67)
+low_agogo=HapticDrum('low_agogo',None, 37, 68)
+cabasa=HapticDrum('cabasa',None, 38, 69)
+mute_cuica=HapticDrum('mute_cuica',None, 39, 78)
+open_cuica=HapticDrum('open_cuica',None,40, 79)
 root = CTk()
 root.axis_to_name={'Nintendo Switch Pro Controller':{'A4':'ZL', 'A5': 'ZR'}}
 root.button_to_name={'Nintendo Switch Pro Controller': {'0': 'A', '1': 'B', '2':'X', '3':'Y', '7':'LS Press', '8':'RS Press', '9':'L', '10':'R','11':'Dpad Up', '12':'Dpad Down', '13':'Dpad Left', '14':'Dpad Right'},
                      'Xbox 360 Controller':{'0': 'A', '1': 'B', '2':'X', '3':'Y', '4': 'LB', '5':'RB', '8':'LS Press', '9':'RS Press'},
                      'PS4 Controller':{'0':'✕', '1':'○', '2':'◻', '3':'△','7':'L3', '8':'R3', '9':'L1', '10':'R1','11':'Dpad Up', '12':'Dpad Down', '13':'Dpad Left', '14':'Dpad Right'}}
-root.name_to_drum={'---':None, 'Kick 2':bass_drum_2, 'Kick 1':bass_drum, 'Side Stick': side_stick, 'Snare 1':snare_drum, 'Clap':clap, 'Snare 2':snare_drum_2, 'Low Floor Tom':floor_tom, 'Closed HiHat':hi_hat_closed, 'High Floor Tom': floor_tom_2, 'Pedal HiHat':hi_hat_foot, 'Low Tom':low_tom, 'Open HiHat':hi_hat_open, 'Low-Mid Tom':low_mid_tom, 'High-Mid Tom':hi_mid_tom, 'Crash 1':crash_cymbal, 'High Tom':hi_tom, 'Ride 1':ride_cymbal, 'Ride Bell':ride_bell, 'Tambourine':tambourine, 'Splash Cymbal':splash, 'Cowbell': low_woodblock, 'Crash 2':crash_cymbal_2, 'Vibraslap':vibraslap, 'Ride 2':ride_cymbal_2, 'High Bongo': hi_bongo, 'Low Bongo':low_bongo, 'High Conga':hi_conga, 'Low Conga':low_conga, 'High Timbale':hi_timbale,'Low Timbale': low_timbale, 'Woodblock':hi_woodblock, 'Claves':claves, 'Shaker':shaker, 'Maracas':maracas, 'Mute Triangle':m_triangle, 'Open Triangle': triangle}
+root.name_to_drum={'---':None, 'Kick 2':bass_drum_2, 'Kick 1':bass_drum, 'Side Stick': side_stick, 'Snare 1':snare_drum, 'Clap':clap, 'Snare 2':snare_drum_2, 'Low Floor Tom':floor_tom, 'Closed HiHat':hi_hat_closed, 'High Floor Tom': floor_tom_2, 'Pedal HiHat':hi_hat_foot, 'Low Tom':low_tom, 'Open HiHat':hi_hat_open, 'Low-Mid Tom':low_mid_tom, 'High-Mid Tom':hi_mid_tom, 'Crash 1':crash_cymbal, 'High Tom':hi_tom, 'Ride 1':ride_cymbal, 'Ride Bell':ride_bell, 'Tambourine':tambourine, 'Splash Cymbal':splash, 'Cowbell': low_woodblock, 'Crash 2':crash_cymbal_2, 'Vibraslap':vibraslap, 'Ride 2':ride_cymbal_2, 'High Bongo': hi_bongo, 'Low Bongo':low_bongo, 'High Conga':hi_conga, 'Low Conga':low_conga, 'High Timbale':hi_timbale,'Low Timbale': low_timbale, 'High Agogo':hi_agogo, 'Low Agogo':low_agogo, 'Cabasa':cabasa, 'Claves':claves, 'Woodblock':hi_woodblock, 'Maracas':maracas, 'Mute Cuica':mute_cuica, 'Open Cuica':open_cuica, 'Mute Triangle':m_triangle, 'Open Triangle': triangle, 'Shaker':shaker}
 def check_status():
     low_bat_count=0
     crit_bat_count=0
@@ -145,9 +150,11 @@ def check_status():
             tab=tabview.tab('Cnt'+str(joy.get_instance_id()))
             root.joysticks[joy.get_instance_id()]=joy
             CTkLabel(tab, text=joy.get_name()).pack()
-            CTkLabel(tab, text='Battery:').pack()
-            statusLabel=CTkLabel(tab, text='Unknown', text_color=('grey', 'grey'))
-            statusLabel.pack()
+            fr=CTkFrame(tab)
+            fr.pack()
+            CTkLabel(fr, text='Battery:').pack(side=LEFT)
+            statusLabel=CTkLabel(fr, text='Unknown', text_color=('grey', 'grey'))
+            statusLabel.pack(side=LEFT,padx=5)
             root.statuses[joy.get_instance_id()]=statusLabel
             checkbox=CTkSwitch(tab, text='Always bind controller to drums')
             checkbox.pack()
@@ -161,7 +168,10 @@ def check_status():
             elif joy.get_name()=='Sony Interactive Entertainment Wireless Controller':
                 default_mapping={'0':'Snare 1', '1':'Kick 1', '2':'Low Tom', '3':'Pedal HiHat', '11':'Side Stick', '12':'Low Floor Tom', '4':'Crash 1', '5':'Ride 1', 'D_Up': 'Open HiHat', 'D_Down':'Closed HiHat', 'D_Left':'High Tom', 'D_Right': 'Low-Mid Tom'}
             else:
-                default_mapping={'0':'Snare 1', '1':'Kick 1', '2':'Low Tom', '3':'Pedal HiHat', '4':'Crash 1', '5':'Ride 1','6':'---','7':'---','8':'Side Stick', '9':'Low Floor Tom', '10':'---', '11':'---','12':'---','13':'---','14':'---','15':'---','D_Up':'Open HiHat', 'D_Down':'Closed HiHat', 'D_Left':'High Tom', 'D_Right': 'Low-Mid Tom'} 
+                if joy.get_numhats()>0:
+                    default_mapping={'0':'Snare 1', '1':'Kick 1', '2':'Low Tom', '3':'Pedal HiHat', '4':'Crash 1', '5':'Ride 1','6':'---','7':'---','8':'Side Stick', '9':'Low Floor Tom', '10':'---', '11':'---','12':'---','13':'---','14':'---','15':'---','D_Up':'Open HiHat', 'D_Down':'Closed HiHat', 'D_Left':'High Tom', 'D_Right': 'Low-Mid Tom'}
+                else:
+                    default_mapping={'0':'Snare 1', '1':'Kick 1', '2':'Low Tom', '3':'Pedal HiHat', '4':'Crash 1', '5':'Ride 1','6':'---','7':'---','8':'Side Stick', '9':'Low Floor Tom', '10':'---', '11':'---','12':'---','13':'---','14':'---','15':'---'} 
             tabview.set('Cnt'+str(joy.get_instance_id()))
             temp={}
             temp2={}
@@ -174,16 +184,29 @@ def check_status():
             for i in range(len(default_mapping)):
                 c=root.button_to_name[joy.get_name()][str(list(default_mapping.keys())[i])] if (('D' not in str(list(default_mapping.keys())[i])) and ('A' not in str(list(default_mapping.keys())[i])) and (joy.get_name() in root.button_to_name)) else (root.axis_to_name[joy.get_name()][str(list(default_mapping.keys())[i])] if ('A' in str(list(default_mapping.keys())[i])) else str(list(default_mapping.keys())[i]))
                 l=CTkLabel(fra, text=c, text_color=('#000000', '#ffffff'))
-                l.grid(column=1, row=i+1)
+                if i>15:
+                    l.grid(column=4, row=i-15)
+                else:
+                    l.grid(column=1, row=i+1)
                 o=CTkOptionMenu(fra, values=list(root.name_to_drum.keys()))
-                o.grid(column=2, row=i+1)
+                if i>15:
+                    o.grid(column=5, row=i-15)
+                else:
+                    o.grid(column=2, row=i+1)
                 o.set(default_mapping[str(list(default_mapping.keys())[i])])
                 temp[str(list(default_mapping.keys())[i])]=o
                 s=CTkSlider(fra, from_=0, to=127)
                 s.set(127)
-                s.grid(column=3, row=i+1)
+                if i>15:
+                    s.grid(column=6, row=i-15)
+                else:
+                    s.grid(column=3, row=i+1)
                 temp2[str(list(default_mapping.keys())[i])]=s
                 temp3[str(list(default_mapping.keys())[i])]=l
+                if i==16:
+                    CTkLabel(fra, text='Button').grid(column=4, row=0)
+                    CTkLabel(fra, text='Mapping').grid(column=5, row=0)
+                    CTkLabel(fra, text='Velocity').grid(column=6, row=0)
             root.dropdowns[joy.get_instance_id()]=temp
             root.sliders[joy.get_instance_id()]=temp2
             root.indicators[joy.get_instance_id()]=temp3
@@ -203,7 +226,7 @@ def check_status():
                     hi_hat_open.stop()
                 root.indicators[event.instance_id][str(event.button)].configure(text_color=('#00ff00', '#00ff00'))
             except:
-                pass
+                root.indicators[event.instance_id][str(event.button)].configure(text_color=('orange', 'orange'))
         if event.type == pygame.JOYBUTTONUP:
             name=root.joysticks[event.instance_id].get_name()
             try:
@@ -222,7 +245,7 @@ def check_status():
                             hi_hat_open.stop()
                         root.indicators[event.instance_id]['D_Down'].configure(text_color=('#00ff00', '#00ff00'))
                     except:
-                        pass
+                        root.indicators[event.instance_id]['D_Down'].configure(text_color=('orange', 'orange'))
                 elif haty==1 and (root.focus_displayof() is not None):
                     try:
                         root.name_to_drum[root.dropdowns[event.instance_id]['D_Up'].get()].trigger(root.sliders[event.instance_id]['D_Up'].get())
@@ -230,7 +253,7 @@ def check_status():
                             hi_hat_open.stop()
                         root.indicators[event.instance_id]['D_Up'].configure(text_color=('#00ff00', '#00ff00'))
                     except:
-                        pass
+                        root.indicators[event.instance_id]['D_Up'].configure(text_color=('orange', 'orange'))
                 elif haty==0:
                     try:
                         root.indicators[event.instance_id]['D_Up'].configure(text_color=('#000000', '#ffffff'))
@@ -246,7 +269,7 @@ def check_status():
                             hi_hat_open.stop()
                         root.indicators[event.instance_id]['D_Left'].configure(text_color=('#00ff00', '#00ff00'))
                     except:
-                        pass
+                        root.indicators[event.instance_id]['D_Left'].configure(text_color=('orange', 'orange'))
                 elif hatx==1 and (root.focus_displayof() is not None):
                     try:
                         root.name_to_drum[root.dropdowns[event.instance_id]['D_Right'].get()].trigger(root.sliders[event.instance_id]['D_Right'].get())
@@ -254,7 +277,7 @@ def check_status():
                             hi_hat_open.stop()
                         root.indicators[event.instance_id]['D_Right'].configure(text_color=('#00ff00', '#00ff00'))
                     except:
-                        pass
+                        root.indicators[event.instance_id]['D_Right'].configure(text_color=('orange', 'orange'))
                 elif hatx==0:
                     try:
                         root.indicators[event.instance_id]['D_Left'].configure(text_color=('#000000', '#ffffff'))
@@ -282,7 +305,7 @@ def check_status():
                             hi_hat_open.stop()
                         root.indicators[event.instance_id]['A'+str(event.axis)].configure(text_color=('#00ff00', '#00ff00'))
                     except:
-                        pass
+                        root.indicators[event.instance_id]['A'+str(event.axis)].configure(text_color=('orange', 'orange'))
                 if event.value!=1:
                     try:
                         root.indicators[event.instance_id]['A'+str(event.axis)].configure(text_color=('#000000', '#ffffff'))
@@ -537,7 +560,8 @@ patch_change.pack(side=LEFT)
 CTkButton(frame2, command=change_patch, text='Apply Selected Patch').pack()
 frame2.pack()
 frame=CTkFrame(root)
-CTkLabel(frame, text='Number of controllers connected:').pack(side=LEFT)
+w=CTkLabel(frame, text='Number of controllers connected:')
+w.pack(side=LEFT)
 controller_count=CTkLabel(frame, text='0', text_color=('grey', 'grey'))
 controller_count.pack(side=LEFT, padx=5)
 frame.pack()
@@ -555,8 +579,8 @@ start.pack(side=LEFT, padx=5)
 key_enable=CTkSwitch(tabview.tab('KB'), text='Bind keyboard to drums')
 key_enable.pack()
 CTkLabel(tabview.tab('KB'), text='Mapping:\nSpace: Kick\nA/S: Snare\nD/J/K/L: Toms\nH: Open Hi-Hat\nG: Pedal Hi-Hat\nF: Closed Hi-Hat\nQ: Crash Cymbal 1\nP: Crash Cymbal 2\nO: Ride Cymbal 1\nW: Ride Cymbal 2\nX: Side Stick\nE/R: Bongos\nT/Y: Congas\nU/I: Timbales\nZ: Maracas\nC: Shaker\nV: Vibraslap\nB: Claves\nN: Woodblock\nM: Cowbell').pack()
-Hovertip(controller_count, 'A red number indicates a low battery in one or more controllers')
-Hovertip(patch_change, "Each patch correlates to a different sound set\n0: Standard Kit\n1: Alt. Kit\n8: Room Kit\n16: Power Kit\n24: Electronic Kit\n25: TR-808\n26: Dance Kit\n32: Jazz Kit\n40: Brush Kit\n48: Orchestral Percussion\nClick 'Apply Selected Patch' for the new patch to take effect.\nIf you're using the internal sampler, only patches 0, 1, and 25 will take effect.\nWARNING: If using patch 48, the drum selections may not match the output sounds.")
+Hovertip(w, 'A red number indicates a low battery in one or more controllers')
+Hovertip(patch_change, "Each patch correlates to a different sound set\n0: Standard Kit\n1: Alt. Kit\n8: Room Kit\n16: Power Kit\n24: Electronic Kit\n25: TR-808\n26: Dance Kit\n32: Jazz Kit\n40: Brush Kit\n48: Orchestral Percussion\nClick 'Apply Selected Patch' for the new patch to take effect.\nIf you're using the internal sampler, only patches 0, 1, and 25 will take effect.\nWARNING: If you're using patch 48, the second sound in the mapping will be triggered, else the first sound will be triggered.")
 Hovertip(midiselect, 'Use to select an output for the program. Some features, like pan or patch selection, only work when an external MIDI output is selected')
 root.protocol('WM_DELETE_WINDOW', close)
 CTkLabel(tabview.tab('COM'), text='Serial Char Mapping:\nK: Kick\nS: Snare\nF: Closed Hi-Hat\nH: Open Hi-Hat\nG: Pedal Hi-Hat\nB: Floor Tom\nL: Low Tom\nM: Mid Tom\nN: High Tom\nQ: Crash Cymbal\nP: Ride Cymbal\nR: Rimshot').pack()
